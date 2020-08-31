@@ -106,7 +106,6 @@ class TreeNet(nn.Module):
     def __init__(self):
         super(TreeNet, self).__init__()
         self.message_pass = MessagePass()
-        self.conv = transition_block(256, 1)
         self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
@@ -185,17 +184,7 @@ class TreeNet(nn.Module):
         conv6cat = torch.cat((conv6_a_plus, conv6_b_plus), dim=1)
         conv7cat = torch.cat((conv7_a_plus, conv7_b_plus), dim=1)
         conv8cat = torch.cat((conv8_a_plus, conv8_b_plus), dim=1)
-
-        conv9_1 = self.conv(conv1cat)
-        conv9_2 = self.conv(conv2cat)
-        conv9_3 = self.conv(conv3cat)
-        conv9_4 = self.conv(conv4cat)
-        conv9_5 = self.conv(conv5cat)
-        conv9_6 = self.conv(conv6cat)
-        conv9_7 = self.conv(conv7cat)
-        conv9_8 = self.conv(conv8cat)
-
-        conv9 = torch.cat((conv9_1, conv9_2, conv9_3, conv9_4, conv9_5, conv9_6, conv9_7, conv9_8), dim=1)
+        
         allconv = torch.cat((conv1cat, conv2cat, conv3cat, conv4cat, conv5cat, conv6cat, conv7cat, conv8cat), dim=1)
         return allconv
 
