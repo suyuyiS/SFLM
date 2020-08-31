@@ -18,13 +18,13 @@ python create_info.py
 #### 3. Train
 ```
 # 'root' and 'dataset' options are necessary.
-python train.py --root [root_directory] --dataset [dataset_option]
+python train_s.py --root [root_directory] --dataset [dataset_option]
 ```
 
 #### 4. Evaluate
 ```
 # You can run the file only for evaluation
-python train.py --root [root_directory] --dataset [dataset_option] --evaluate True
+python train_s.py --root [root_directory] --dataset [dataset_option] --evaluate True
 ```
 
 --------------
