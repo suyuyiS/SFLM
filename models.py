@@ -77,14 +77,7 @@ class MessagePass(nn.Module):
     def __init__(self, in_channel=128):
         super(MessagePass, self).__init__()
         self.inplanes = 128
-        self.ca = ChannelAttention(self.inplanes)
-        self.sa = SpatialAttention()
-        self.res_layer = self._make_layer(Bottleneck, 128, 4)
-        self.conv = nn.Conv2d(512, 128, 1, 1)
-        self.bn = nn.BatchNorm2d(128)
-        # self.ca1 = ChannelAttention(512)
-        # self.sa1 = SpatialAttention()
-        self.relu = nn.ReLU(inplace=True)
+        self.geometrical_transform_kernels = self._make_layer(Bottleneck, 32, 3)
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
@@ -104,17 +97,9 @@ class MessagePass(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        x = self.ca(x) * x
-        x = self.sa(x) * x
-        x = self.res_layer(x)
-        # x = self.ca1(x) * x
-        # x = self.sa1(x) * x
-        x = self.relu(self.bn(self.conv(x)))
-        # x = self.relu(self.conv1(x))
-        # x = self.relu(self.conv2(x))
-        # x = self.conv3(x)
-        # x = self.relu(self.bn1(self.conv1(x)))
-        # x = self.relu(self.bn2(self.conv2(x)))
+        
+        x = self.geometrical_transform_kernels(x)
+        
         return x
 
 class TreeNet(nn.Module):
@@ -255,8 +240,8 @@ class Bottleneck(nn.Module):
         super(Bottleneck, self).__init__()
         self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride,
-                               padding=1, bias=False)
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=7, stride=stride,
+                               padding=3, bias=False)
         self.bn2 = nn.BatchNorm2d(planes)
         self.conv3 = nn.Conv2d(planes, planes * self.expansion, kernel_size=1, bias=False)
         self.bn3 = nn.BatchNorm2d(planes * self.expansion)
