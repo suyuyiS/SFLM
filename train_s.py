@@ -9,7 +9,8 @@ import numpy as np
 import pandas as pd
 from torch.utils.data import DataLoader
 from models import StructNet
-from utils import cal_loss, Evaluator, load_weight
+from utils import cal_loss, Evaluator
+import utils
 parser = argument_parser()
 args = parser.parse_args()
 
@@ -49,7 +50,7 @@ def main():
     if not args.weight_file == None:
         weights = torch.load(args.weight_file)
         if args.update_weight:
-            weights = load_weight(net, weights)
+            weights = utils.load_weight(net, weights)
         net.load_state_dict(weights)
 
     # evaluate only
