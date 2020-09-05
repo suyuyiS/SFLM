@@ -115,4 +115,7 @@ def test(net, test_loader, epoch):
                       results['lm_dist'][4], results['lm_dist'][5], results['lm_dist'][6], results['lm_dist'][7],
                       results['lm_dist_all']))
 
+                      
+if __name__ == '__main__':
+    main()
 
