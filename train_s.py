@@ -9,10 +9,7 @@ import numpy as np
 import pandas as pd
 from torch.utils.data import DataLoader
 from models import StructNet
-from utils import cal_loss, Evaluator
-import utils
-import os
-import cv2
+from utils import cal_loss, Evaluator, load_weight
 parser = argument_parser()
 args = parser.parse_args()
 
@@ -49,11 +46,10 @@ def main():
     # Load model
     print("Load the model...")
     net = torch.nn.DataParallel(StructNet().cuda())
-    net = torch.nn.DataParallel(FPN_dafe()).cuda()
     if not args.weight_file == None:
         weights = torch.load(args.weight_file)
         if args.update_weight:
-            weights = utils.load_weight(net, weights)
+            weights = load_weight(net, weights)
         net.load_state_dict(weights)
 
     # evaluate only
@@ -100,10 +96,6 @@ def test(net, test_loader, epoch):
     net.eval()
     test_step = len(test_loader)
     print('\nEvaluating...')
-    show_flag = False
-    if epoch == -1:
-        show_flag = True
-    count = 0
     with torch.no_grad():
         evaluator = Evaluator()
         for i, sample in enumerate(test_loader):
@@ -122,5 +114,4 @@ def test(net, test_loader, epoch):
                       results['lm_dist'][4], results['lm_dist'][5], results['lm_dist'][6], results['lm_dist'][7],
                       results['lm_dist_all']))
 
-if __name__ == '__main__':
-    main()
+
